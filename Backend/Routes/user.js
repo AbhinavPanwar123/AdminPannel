@@ -43,8 +43,10 @@ router.post("/user", async function (req, res, next) {
 router.post("/sendVerificationEmail", async function (req, res, next) {
   try {
     const { email } = req.body;
-
+    console.log(email);
     let user = await userSchema.findOne({ email });
+    console.log(email);
+
     if (!user) {
       return res
         .status(404)
@@ -99,9 +101,9 @@ router.post("/sendVerificationEmail", async function (req, res, next) {
 });
 router.put("/resetPassword", async (req, res, next) => {
   try {
-    const { email, resetToken, newPassword } = req.body;
-
-    let user = await userSchema.findOne({ email });
+    const { resetToken, newPassword } = req.body;
+    console.log();
+    let user = await userSchema.findOne({ resetToken });
     if (!user) {
       return res
         .status(404)

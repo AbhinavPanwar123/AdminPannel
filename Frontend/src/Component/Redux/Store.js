@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from 'redux-persist/lib/storage';
 import {persistReducer,persistStore} from 'redux-persist';
 import registerReducers from './Slices/RegisterSlice';
@@ -8,9 +8,9 @@ const persistConfig = {
     storage,
 };
 
-const rootReducer = {
+const rootReducer = combineReducers( {
   register : registerReducers,
-};
+});
 
 const persistedReducer = persistReducer(persistConfig,rootReducer)
 

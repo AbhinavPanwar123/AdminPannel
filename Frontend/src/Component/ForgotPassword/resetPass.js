@@ -18,7 +18,6 @@ const defaultTheme = createTheme();
 
 const ResetPassword = () => {
   const { token } = useParams();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
@@ -35,7 +34,6 @@ const ResetPassword = () => {
       const response = await axios.put(
         "http://localhost:5000/users/resetPassword",
         {
-          email,
           resetToken: token,
           newPassword: password,
         },
@@ -45,10 +43,13 @@ const ResetPassword = () => {
           },
         }
       );
+
+      console.log(response)
+
       setMessage("Password reset successful");
       setTimeout(() => {
         navigate("/");
-      }, 3000);
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Error resetting password");
       console.error("Error resetting password:", err);
@@ -73,16 +74,6 @@ const ResetPassword = () => {
               Reset Password
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
               <TextField
                 variant="outlined"
                 margin="normal"

@@ -23,7 +23,7 @@ const EmailVerification = ({
       try {
         const response = await axios.post(
           "http://localhost:5000/users/sendVerificationEmail",
-          
+          {email: values.email}
         );
         setMessage(response.data.message);
         setEmail(values.email);

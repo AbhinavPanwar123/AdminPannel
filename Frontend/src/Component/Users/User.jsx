@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const User = () => {
+  const [data,setData] = useState('');
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.clear("email");
-    return navigate("/");
+    localStorage.clear("email")
+    return navigate("/")
   };
+
   return (
     <div>
     <div>

@@ -1,23 +1,25 @@
-import {createSlice} from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  users : [{
-    name:'',
-    email:'',
-    password:''
-  }]
-}
+  users: [
+    {
+      name: "",
+      email: "",
+      password: "",
+    },
+  ],
+};
 
 const registerSlice = createSlice({
-name:register,
-initialState,
-reducers: {
-  signUp: (state,{payload})=>{
-    console.log(payload)
-    state.users = [payload]
-  }
-}
-})
+  name: "register",
+  initialState,
+  reducers: {
+    signup: (state, { payload }) => {
+      console.log(payload);
+      state.users = [payload];
+    },
+  },
+});
 
-export const {signUp} = registerSlice.actions;
+export const { signup } = registerSlice.actions;
 export default registerSlice.reducer;

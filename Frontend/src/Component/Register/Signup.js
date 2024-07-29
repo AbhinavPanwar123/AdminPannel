@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import {useDispatch,useSelector} from 'react-redux';
 import {  useNavigate } from 'react-router-dom';
-import { signUp } from '../Redux/Slices/RegisterSlice';
+import { signup } from '../Redux/Slices/RegisterSlice';
 import{Avatar,
   Button,
   CssBaseline,
@@ -34,20 +34,24 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const userData = useSelector((state)=>state?.register?.users[0])
+  console.log('data->',userData)
+
   const formik = useFormik({
     initialValues: {
-      name:'',
-      email: '',
+      name:userData?.name ||'',
+      email: userData?.email ||'',
       password: '',
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values,action) => {
       try {
         await axios.post('http://localhost:5000/users/user', values, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
+        dispatch(signup(values))
         navigate("/");
       } catch (error) {
         setError(error.response?.data?.msg || 'An error occurred');

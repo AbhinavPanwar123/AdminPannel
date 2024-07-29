@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema({
     newpassword: {
         type: String,
         minLength: [5, 'Min length should be 5 characters'],
+    },
+    resetToken : {
+        type:String
     }
 });
 
