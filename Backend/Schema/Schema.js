@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
     name:{
         type:String,
         minLength:[3,'Minimum 3 characters are required'],
@@ -28,4 +28,4 @@ const userSchema = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('userSchema', userSchema);
+module.exports = mongoose.model('adminSchema', adminSchema);

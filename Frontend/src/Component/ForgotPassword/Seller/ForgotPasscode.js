@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Container, Paper, Box, Avatar, Typography, Grid, Link, createTheme, ThemeProvider } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import EmailVerification from '../ForgotPassword/emailVerify';
-import ResetPassword from '../ForgotPassword/resetPass';
+import EmailVerify from './Verify';
+import ChangePassword from './ChangePassword';
 
 const defaultTheme = createTheme();
 
-const ForgotPassword = () => {
+const ForgotPasscode = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ const ForgotPassword = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailVerification = (email, token) => {
+  const handleEmailVerify = (email, token) => {
     setEmail(email);
     setResetToken(token);
     setIsEmailVerified(true);
@@ -39,15 +39,15 @@ const ForgotPassword = () => {
               Forgot Password
             </Typography>
             {!isEmailVerified ? (
-              <EmailVerification
+              <EmailVerify
                 setMessage={setMessage}
                 setError={setError}
                 setEmail={setEmail}
                 setResetToken={setResetToken}
-                onEmailVerified={handleEmailVerification}
+                onEmailVerified={handleEmailVerify}
               />
             ) : (
-              <ResetPassword
+              <ChangePassword
                 email={email}
                 resetToken={resetToken}
                 navigate={navigate}
@@ -66,7 +66,7 @@ const ForgotPassword = () => {
             {!isEmailVerified && (
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link component={RouterLink} to="/" variant="body2">
+                  <Link component={RouterLink} to="/sellerSignin" variant="body2">
                     Remembered your password? Sign in
                   </Link>
                 </Grid>
@@ -79,4 +79,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasscode;

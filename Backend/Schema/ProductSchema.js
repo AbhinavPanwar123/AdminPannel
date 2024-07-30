@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-    productname:{
+    name:{
         type:String,
         required:[true,'Product name is required'],
         minLength:[3,'Product name must contain atleast 3 characters'],
         trim:true
     },
-    Description:{
+    description:{
         type:String,
         required:[true,'Product must have description']
     },
@@ -24,6 +24,10 @@ const productSchema = new mongoose.Schema({
     shipping:{
         type:Boolean,
         default:false
+    },
+    photo:{
+        type:String,
+        required:true
     },
     seller_id:{
         type:String,

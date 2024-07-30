@@ -1,11 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import storage from 'redux-persist/lib/storage';
 import {persistReducer,persistStore} from 'redux-persist';
 import registerReducers from './Slices/RegisterSlice';
+import sessionStorage from "redux-persist/es/storage/session";
 
 const persistConfig = {
     key : 'root',
-    storage,
+    storage:sessionStorage,
 };
 
 const rootReducer = combineReducers( {

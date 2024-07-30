@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  users: [
+  sellers: [
     {
       name: "",
       email: "",
-      password: "",
-    },
+      phone:"",
+      address:"",
+      gstin:"",
+      password: ""
+    }
   ],
 };
 
@@ -16,7 +19,7 @@ const registerSlice = createSlice({
   reducers: {
     signup: (state, { payload }) => {
       console.log(payload);
-      state.users = [payload];
+      state.sellers = [payload];
     },
   },
 });

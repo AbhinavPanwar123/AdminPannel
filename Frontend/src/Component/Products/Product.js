@@ -1,6 +1,7 @@
 import React from "react";
 import "../Products/Product.css";
 import { useNavigate } from "react-router-dom";
+import '../Products/Product.css';
 
 const Product = () => {
   const navigate = useNavigate();

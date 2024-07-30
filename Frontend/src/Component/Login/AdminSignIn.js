@@ -36,7 +36,10 @@ const defaultTheme = createTheme();
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
-  password: Yup.string().required('Required'),
+  password: Yup.string()
+  .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 
+           'Password must be at least 8 characters, include one uppercase letter, one lowercase letter, one number, and one special character')
+  .required('Password is required')
 });
 
 export default function SignIn() {
@@ -57,7 +60,7 @@ export default function SignIn() {
   useEffect(() => {
     const signInUser = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/users/signin', userData);
+        const response = await axios.post('http://localhost:5000/users/adminSignin', userData);
         setLoading(false);
         const { email } = userData;
         signin(email);
@@ -156,8 +159,8 @@ export default function SignIn() {
                       </Link>
                     </Grid>
                     <Grid item>
-                      <Link href="/signup" variant="body2">
-                        {"Don't have an account? Sign Up"}
+                      <Link href="/sellerSignin" variant="body2">
+                        {"For Seller? Sign In"}
                       </Link>
                     </Grid>
                   </Grid>
