@@ -1,8 +1,8 @@
 const JWT = require('jsonwebtoken');
 
-const generateToken = (userId) => {
+const generateToken = (sellerId) => {
     return JWT.sign(
-        {userId},
+        {sellerId},
         "mysecretkey",
         {expiresIn:'4d'}
     )

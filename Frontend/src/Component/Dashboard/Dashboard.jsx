@@ -55,7 +55,6 @@ const Dashboard = () => {
         <aside className="sidebar">
           <ul className="sidebar-menu">
             <li><a href="/dashboard">DASHBOARD</a></li>
-            <li><a href="/user">USERS</a></li>
             <li><a href="/product">PRODUCTS</a></li>
             <li><a href="/seller">SELLERS</a></li>
           </ul>

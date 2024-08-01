@@ -11,17 +11,15 @@ let Sellers = [];
 
 //Random Token
 const characters =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 function generateVerificationToken(length) {
-let result = "";
-const charactersLength = characters.length;
-for (let i = 0; i < length; i++) {
-  result += characters.charAt(
-    Math.floor(Math.random() * charactersLength)
-  );
-}
-return result;
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 const verificationToken = generateVerificationToken(5);
@@ -166,7 +164,7 @@ router.put("/resetPassword", async (req, res, next) => {
 router.post("/sellerSignup", async function (req, res, next) {
   try {
     const { name, email, phone, address, gstin, password } = req.body;
-    let sellerAlreadyExists = await sellerSchema.findOne({email});
+    let sellerAlreadyExists = await sellerSchema.findOne({ email });
     if (sellerAlreadyExists) {
       return res.status(400).send({ message: "Seller Already exist" });
     }
@@ -203,7 +201,7 @@ router.post("/sellerSignup", async function (req, res, next) {
 router.delete("/seller/:id", async function (req, res, next) {
   try {
     const sellerId = req.params.id;
-    const deletedSeller = await sellerSchema.findByIdAndDelete(userId);
+    const deletedSeller = await sellerSchema.findByIdAndDelete(sellerId);
 
     if (!deletedSeller) {
       return res.status(404).send({ message: "Seller not found" });
@@ -218,6 +216,17 @@ router.delete("/seller/:id", async function (req, res, next) {
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: "Server error" });
+  }
+});
+
+//get sellers list
+router.get("/getSellersList", async function (req, res, next) {
+  try {
+    const sellerList = await sellerSchema.find({});
+    return res.status(200).json(sellerList);
+  } catch (error) {
+    console.error("Error fetching seller list:", error);
+    return res.status(500).json({ error: "Failed to fetch seller list" });
   }
 });
 
@@ -321,7 +330,7 @@ router.put("/changePassword", async (req, res, next) => {
   }
 });
 
-//Image Upload 
+//Image Upload
 router.post("/upload", upload.single("adminPic"), function (req, res, next) {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
