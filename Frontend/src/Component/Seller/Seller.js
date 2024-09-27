@@ -1,128 +1,57 @@
-import React, { useEffect, useState } from "react";
-import "../Seller/Seller.css";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Layout from "../Layout/Layout";
 
 const Seller = () => {
+  const [sellerData, setSellerData] = useState([]);
   const navigate = useNavigate();
-  const [sellers, setSellers] = useState([]);
 
-  const handleLogout = () => {
-    localStorage.clear("email");
-    return navigate("/");
-  };
-
-  // Fetch sellers list
-
-  const fetchSellers = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/users/getSellersList"
-      );
-      setSellers(response.data);
-    } catch (error) {
-      console.error("Error fetching sellers list:", error);
-    }
-  };
-
+  // Fetch seller data
   useEffect(() => {
-    fetchSellers();
+    const fetchSellerData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/users/getSellersList");
+        setSellerData(response.data.sellers);
+      } catch (error) {
+        console.error("Error fetching seller data", error);
+      }
+    };
+
+    fetchSellerData();
   }, []);
 
-  // Handle delete seller
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/users/seller/${id}`);
-      fetchSellers();
-    } catch (error) {
-      console.error("Error deleting seller:", error);
-    }
+  // Handle navigation to seller profile
+  const handleViewProfile = (sellerId) => {
+    navigate(`/seller/profile/${sellerId}`);
   };
 
   return (
-    <div className="sellerPage">
-      {/* Header */}
-      <header className="header">
-        <div className="header-left">
-          <h5>E-Commerce</h5>
-        </div>
-        <div className="header-right">
-          <a href="profile" className="header-profile-link">
-            <img
-              src="https://img.freepik.com/free-vector/illustration-user-avatar-icon_53876-5907.jpg?size=626&ext=jpg&ga=GA1.1.412138692.1719166883&semt=ais_user"
-              alt="Profile"
-              className="header-profile-logo"
-            />
-          </a>
-          <button
-            className="header-button logout-button"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <div className="main-layout">
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <ul className="sidebar-menu">
-            <li>
-              <a href="/dashboard">DASHBOARD</a>
-            </li>
-            <li>
-              <a href="/product">PRODUCTS</a>
-            </li>
-            <li>
-              <a href="/seller">SELLERS</a>
-            </li>
-          </ul>
-        </aside>
-
-        <main className="content">
-          <h2>Sellers List</h2>
-          <table className="sellers-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>GSTIN</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sellers.length > 0 ? (
-                sellers.map((seller) => (
-                  <tr key={seller._id}>
-                    <Link to={`/seller/${seller._id}`} />
-                    <td>{seller.name}</td>
-                    <td>{seller.email}</td>
-                    <td>{seller.phone}</td>
-                    <td>{seller.address}</td>
-                    <td>{seller.gstin}</td>
-                    <td>
-                      <button className="edit-button">Edit</button>
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(seller._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6">No sellers found.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </main>
+    <Layout pageTitle="Seller List">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {sellerData.map((seller) => (
+          <div key={seller._id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg transition-transform transform hover:scale-105">
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {seller.name}
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300">
+                Email: {seller.email}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                Phone: {seller.phone}
+              </p>
+              <button 
+                className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
+                onClick={() => handleViewProfile(seller._id)}
+              >
+                View Profile
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
+    </Layout>
   );
 };
 

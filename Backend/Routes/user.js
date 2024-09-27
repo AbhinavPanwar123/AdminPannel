@@ -24,6 +24,8 @@ function generateVerificationToken(length) {
 
 const verificationToken = generateVerificationToken(5);
 
+// [ADMIN]
+
 //AdminSignup
 router.post("/adminSignup", async function (req, res, next) {
   try {
@@ -82,9 +84,7 @@ router.post("/adminSignin", async (req, res) => {
 router.post("/sendVerificationEmail", async function (req, res, next) {
   try {
     const { email } = req.body;
-    console.log(email);
     let user = await adminSchema.findOne({ email });
-    console.log(email);
 
     if (!user) {
       return res
@@ -160,6 +160,45 @@ router.put("/resetPassword", async (req, res, next) => {
   }
 });
 
+
+// Fetch User Profile
+router.get('/adminProfile', async (req, res) => {
+  try {
+    const user = await adminSchema.find(email);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    res.json({ name: user.name, email: user.email });
+  } catch (err) {
+    res.status(500).send('Server error');
+  }
+});
+
+// Update User Profile
+router.put('/adminUpdate', async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    let user = await adminSchema.find(email);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Update user info
+    user.name = name || user.name;
+    user.email = email || user.email;
+
+    await user.save();
+    res.json({ msg: 'Profile updated successfully' });
+  } catch (err) {
+    res.status(500).send('Server error');
+  }
+});
+
+
+//[SELLER]
+
 //SellerSignup
 router.post("/sellerSignup", async function (req, res, next) {
   try {
@@ -197,39 +236,6 @@ router.post("/sellerSignup", async function (req, res, next) {
   }
 });
 
-//Delete Seller
-router.delete("/seller/:id", async function (req, res, next) {
-  try {
-    const sellerId = req.params.id;
-    const deletedSeller = await sellerSchema.findByIdAndDelete(sellerId);
-
-    if (!deletedSeller) {
-      return res.status(404).send({ message: "Seller not found" });
-    }
-
-    Sellers = Sellers.filter((seller) => seller._id.toString() !== sellerId);
-
-    return res.status(200).send({
-      success: true,
-      data: deletedSeller,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send({ message: "Server error" });
-  }
-});
-
-//get sellers list
-router.get("/getSellersList", async function (req, res, next) {
-  try {
-    const sellerList = await sellerSchema.find({});
-    return res.status(200).json(sellerList);
-  } catch (error) {
-    console.error("Error fetching seller list:", error);
-    return res.status(500).json({ error: "Failed to fetch seller list" });
-  }
-});
-
 //SellerSignin
 router.post("/sellerSignin", async (req, res) => {
   const { email, password } = req.body;
@@ -238,7 +244,6 @@ router.post("/sellerSignin", async (req, res) => {
     if (!seller) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-    console.log("password", password, seller.password);
     const isMatch = await decryptPassword(password, seller.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
@@ -250,83 +255,77 @@ router.post("/sellerSignin", async (req, res) => {
   }
 });
 
-//Forgot Password(Seller)
-router.post("/verifySeller", async function (req, res, next) {
+// Get Sellers List
+router.get("/getSellersList", async function (req, res, next) {
   try {
-    const { email } = req.body;
-    let seller = await sellerSchema.findOne({ email });
-
-    if (!seller) {
-      return res
-        .status(404)
-        .send({ success: false, message: "Email not found" });
-    }
-
-    seller.resetToken = verificationToken;
-    await seller.save();
-    const verificationLink = `http://localhost:3000/changePassword/${verificationToken}`;
-    const mailOptions = {
-      from: "coolgujjarboyabhinav@gmail.com",
-      to: seller.email,
-      subject: "Account Verification",
-      text: `Please click on the following link to verify your account: ${verificationLink}`,
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        return res.status(500).send({
-          success: false,
-          message: "Failed to send verification email",
-        });
-      } else {
-        console.log("Email sent: " + info.response);
-        return res
-          .status(200)
-          .send({ success: true, message: "Verification email sent" });
-      }
-    });
-  } catch (err) {
-    console.error("Error in verifying seller:", err);
-    return res.status(500).send({
-      success: false,
-      message: "Server error",
-    });
+    const sellerList = await sellerSchema.find({});
+    return res.status(200).json({ success: true, sellers: sellerList });
+  } catch (error) {
+    console.error("Error fetching seller list:", error);
+    return res.status(500).json({ error: "Failed to fetch seller list" });
   }
 });
-router.put("/changePassword", async (req, res, next) => {
+
+// Get Seller by ID
+router.get("/getSeller/:id", async function (req, res, next) {
   try {
-    const { resetToken, newPassword } = req.body;
-    console.log();
-    let seller = await sellerSchema.findOne({ resetToken });
+    const sellerId = req.params.id;
+    const seller = await sellerSchema.findById(sellerId); // Use `findById` instead of `find`
+
     if (!seller) {
-      return res
-        .status(404)
-        .send({ success: false, message: "Email not found" });
+      return res.status(404).json({ message: "Seller not found" });
     }
 
-    if (seller.resetToken !== resetToken) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Invalid or expired reset token" });
+    return res.status(200).json({ success: true, data: seller });
+  } catch (error) {
+    console.error("Error fetching seller:", error);
+    return res.status(500).json({ error: "Failed to fetch seller" });
+  }
+});
+
+// Delete Seller by ID
+router.delete("/deleteSeller/:id", async function (req, res, next) {
+  try {
+    const sellerId = req.params.id;
+    const deletedSeller = await sellerSchema.findByIdAndDelete(sellerId);
+
+    if (!deletedSeller) {
+      return res.status(404).send({ message: "Seller not found" });
     }
+    return res.status(200).send({
+      success: true,
+      message: "Seller deleted successfully",
+      data: deletedSeller,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: "Server error" });
+  }
+});
 
-    const hashedPassword = await hashPassword(newPassword);
+// Update Seller by ID (PUT)
+router.put("/updateSeller/:id", async function (req, res, next) {
+  try {
+    const sellerId = req.params.id;
+    const updateData = req.body;
 
-    seller.password = hashedPassword;
-    seller.resetToken = undefined;
+    const updatedSeller = await sellerSchema.findByIdAndUpdate(sellerId, updateData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure the update respects schema validation
+    });
 
-    await seller.save();
+    if (!updatedSeller) {
+      return res.status(404).send({ message: "Seller not found" });
+    }
 
     return res.status(200).send({
       success: true,
-      message: "Password updated successfully",
+      message: "Seller updated successfully",
+      data: updatedSeller,
     });
   } catch (err) {
-    console.error("Error in /changePassword:", err);
-    return res.status(500).send({
-      success: false,
-      message: "Server error",
-    });
+    console.log(err);
+    return res.status(500).send({ message: "Server error" });
   }
 });
 

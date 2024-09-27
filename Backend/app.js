@@ -9,7 +9,6 @@ var cors = require('cors');
 
 var indexRouter = require('./Routes/index');
 var usersRouter = require('./Routes/user');
-const upload = require('./helper/Multer');
 
 var app = express();
 app.use(cors());

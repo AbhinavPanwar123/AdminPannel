@@ -1,0 +1,112 @@
+/* Profile.css */
+
+:root {
+  --background-light: #ffffff;
+  --background-dark: #1a1a1a;
+  --text-light: #333333;
+  --text-dark: #ffffff;
+  --border-light: #ccc;
+  --border-dark: #555;
+  --button-save-bg-light: linear-gradient(45deg, #6a95ff, #6f43ff);
+  --button-delete-bg-light: linear-gradient(45deg, #ff6a6a, #ff4343);
+  --button-save-bg-dark: linear-gradient(45deg, #3a6cff, #4f2bcf);
+  --button-delete-bg-dark: linear-gradient(45deg, #ff4747, #ff3131);
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #000c18 0%, #0853cb00 100%);
+  padding: 2rem;
+}
+
+.profile-card {
+  background-color: var(--background-light);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+.profile-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+
+.input-field {
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.2s ease;
+  color: var(--text-light);
+  background-color: var(--background-light);
+}
+
+.input-field:focus {
+  border-color: #6a95ff;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.profile-actions button {
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.save-btn {
+  background: var(--button-save-bg-light);
+}
+
+.delete-btn {
+  background: var(--button-delete-bg-light);
+}
+
+.save-btn:hover,
+.delete-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Dark mode styles */
+.dark .profile-card {
+  background-color: var(--background-dark);
+}
+
+.dark .profile-title,
+.dark .input-field {
+  color: var(--text-dark);
+}
+
+.dark .input-field {
+  border: 1px solid var(--border-dark);
+  background-color: var(--background-dark);
+}
+
+.dark .save-btn {
+  background: var(--button-save-bg-dark);
+}
+
+.dark .delete-btn {
+  background: var(--button-delete-bg-dark);
+}
