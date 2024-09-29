@@ -1,68 +1,212 @@
-import React from "react";
-import { Grid, Card, CardContent, Typography } from "@mui/material";
-import { AttachMoney, Inventory, BarChart } from "@mui/icons-material";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, BarChart as ReBarChart, Bar } from "recharts";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Layout from "../Layout/Layout";
-
-const lineData = [{ name: "Jan", sales: 4000, stock: 2400, revenue: 2400 }];
-const pieData = [{ name: "Electronics", value: 400 }];
-const barData = [{ name: "Product A", views: 2400 }];
-const COLORS = ["#4B8DF8", "#29B6F6", "#1E88E5", "#1565C0", "#0D47A1"];
+import ReactECharts from "echarts-for-react";
+import {
+  FaDollarSign,
+  FaBoxes,
+  FaChartLine,
+  FaAngleRight,
+  FaSellcast,
+  FaSalesforce,
+} from "react-icons/fa";
 
 const Dashboard = () => {
+  const [lineData, setLineData] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [barData, setBarData] = useState([]);
+
+  const COLORS = ["#4B8DF8", "#29B6F6", "#1E88E5", "#1565C0", "#0D47A1"];
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/users/sales")
+      .then((res) => setLineData(res.data))
+      .catch((err) => console.error("Error fetching line chart data:", err));
+
+    axios
+      .get("http://localhost:5000/users/categories")
+      .then((res) => setPieData(res.data))
+      .catch((err) => console.error("Error fetching pie chart data:", err));
+
+    axios
+      .get("http://localhost:5000/users/product-views")
+      .then((res) => setBarData(res.data))
+      .catch((err) => console.error("Error fetching bar chart data:", err));
+  }, []);
+
+  // Line chart options
+  const lineChartOptions = {
+    title: {
+      text: "Sales Overview",
+      textStyle: { color: "#fff", fontSize: 16 },
+    },
+    tooltip: { trigger: "axis" },
+    grid: { top: "20%", bottom: "15%" },
+    xAxis: {
+      type: "category",
+      data: lineData.map((d) => d.name),
+      axisLabel: { color: "#fff", fontSize: 12 },
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: { color: "#fff", fontSize: 12 },
+    },
+    series: [
+      {
+        name: "Sales",
+        type: "line",
+        data: lineData.map((d) => d.sales),
+        smooth: true,
+        lineStyle: { color: "#4B8DF8", width: 3 },
+        areaStyle: { opacity: 0.3, color: "#4B8DF8" },
+      },
+    ],
+    backgroundColor: "transparent",
+  };
+
+  // Pie chart options
+  const pieChartOptions = {
+    title: {
+      text: "Product Categories",
+      left: "center",
+      textStyle: { color: "#fff", fontSize: 16 },
+    },
+    tooltip: { trigger: "item", formatter: "{a} <br/>{b}: {c} ({d}%)" },
+    legend: {
+      bottom: "5%",
+      textStyle: { color: "#fff", fontSize: 12 },
+    },
+    series: [
+      {
+        name: "Categories",
+        type: "pie",
+        radius: ["40%", "70%"], // Adjusted radius for a donut look
+        avoidLabelOverlap: false,
+        label: {
+          show: true,
+          formatter: "{b}: {d}%",
+          textStyle: { fontSize: 12, color: "#fff" },
+        },
+        labelLine: { length: 15, length2: 10 },
+        data: pieData.map((d, index) => ({
+          value: d.value,
+          name: d.name,
+          itemStyle: { color: COLORS[index % COLORS.length] },
+        })),
+      },
+    ],
+    backgroundColor: "transparent",
+  };
+
+  // Bar chart options
+  const barChartOptions = {
+    title: {
+      text: "Product Views",
+      textStyle: { color: "#fff", fontSize: 16 },
+    },
+    tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+    grid: { top: "20%", bottom: "15%" },
+    xAxis: {
+      type: "category",
+      data: barData.map((d) => d.name),
+      axisLabel: { color: "#fff", fontSize: 12 },
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: { color: "#fff", fontSize: 12 },
+    },
+    series: [
+      {
+        name: "Views",
+        type: "bar",
+        data: barData.map((d) => d.views),
+        barWidth: "50%",
+        itemStyle: {
+          color: "#29B6F6",
+        },
+        label: {
+          show: true,
+          position: "top",
+          formatter: "{c}",
+          textStyle: { color: "#fff", fontSize: 12 },
+        },
+      },
+    ],
+    backgroundColor: "transparent",
+  };
+
   return (
-    <Layout pageTitle="Dashboard">
-      <Grid container spacing={3}>
-        {/* Cards */}
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <AttachMoney fontSize="large" />
-              <Typography variant="h6">Total Sales</Typography>
-              <Typography variant="h4">$50,000</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Line Chart */}
-        <Grid item xs={12} md={8}>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={lineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line dataKey="sales" stroke="#4B8DF8" />
-            </LineChart>
-          </ResponsiveContainer>
-        </Grid>
+    <Layout pageTitle="Home">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Sales Card */}
+        <div className="col-span-1 bg-gradient-to-r from-blue-500 to-blue-800 shadow-md rounded-lg p-6 flex items-center justify-center">
+          <div className="text-center text-white">
+            <FaChartLine className="text-4xl mb-2" />
+            <h3 className="text-xl font-semibold">Total Sales</h3>
+            <p className="text-4xl font-bold">$4000</p>
+          </div>
+        </div>
+        {/* Stock Products Card */}
+        <div className="col-span-1 bg-gradient-to-r from-green-500 to-green-800 shadow-md rounded-lg p-6 flex items-center justify-center">
+          <div className="text-center text-white">
+            <FaBoxes className="text-4xl mb-2" />
+            <h3 className="text-xl font-semibold">Stock</h3>
+            <p className="text-4xl font-bold">2500 Products</p>
+            <p>[Available]</p>
+          </div>
+        </div>
+        {/* Total Revenue Card */}
+        <div className="col-span-1 bg-gradient-to-r from-purple-500 to-purple-800 shadow-md rounded-lg p-6 flex items-center justify-center">
+          <div className="text-center text-white">
+            <FaChartLine className="text-4xl mb-2" />
+            <h3 className="text-xl font-semibold">Total Revenue</h3>
+            <p className="text-4xl font-bold">$2500</p>
+          </div>
+        </div>
+
         {/* Pie Chart */}
-        <Grid item xs={12} md={4}>
-          <ResponsiveContainer width="100%" height={400}>
-            <PieChart>
-              <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#8884d8">
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </Grid>
+        <div className="col-span-1 bg-white dark:bg-gray-900 shadow-md rounded-lg p-6">
+          <div class="flex justify-center items-center">
+            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">
+              Categories
+            </h5>
+          </div>
+          <ReactECharts
+            option={pieChartOptions}
+            style={{ height: "400px", width: "100%" }}
+            theme="dark"
+          />
+        </div>
+
         {/* Bar Chart */}
-        <Grid item xs={12} md={8}>
-          <ResponsiveContainer width="100%" height={400}>
-            <ReBarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="views" fill="#4B8DF8" />
-            </ReBarChart>
-          </ResponsiveContainer>
-        </Grid>
-      </Grid>
+        <div className="col-span-2 bg-white dark:bg-gray-900 shadow-md rounded-lg p-6">
+          <div class="flex justify-center items-center">
+            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">
+              Product Views
+            </h5>
+          </div>
+          <ReactECharts
+            option={barChartOptions}
+            style={{ height: "400px", width: "100%" }}
+            theme="dark"
+          />
+        </div>
+
+        {/* Line Chart */}
+        <div className="col-span-2 bg-white dark:bg-gray-900 shadow-md rounded-lg p-6">
+          <div class="flex justify-center items-center">
+            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">
+              Sales
+            </h5>
+          </div>
+          <ReactECharts
+            option={lineChartOptions}
+            style={{ height: "400px", width: "100%" }}
+            theme="dark"
+          />
+        </div>
+      </div>
     </Layout>
   );
 };

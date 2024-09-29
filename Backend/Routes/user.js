@@ -160,20 +160,6 @@ router.put("/resetPassword", async (req, res, next) => {
   }
 });
 
-
-// Fetch User Profile
-router.get('/adminProfile', async (req, res) => {
-  try {
-    const user = await adminSchema.find(email);
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
-    res.json({ name: user.name, email: user.email });
-  } catch (err) {
-    res.status(500).send('Server error');
-  }
-});
-
 // Update User Profile
 router.put('/adminUpdate', async (req, res) => {
   const { name, email } = req.body;
@@ -193,6 +179,53 @@ router.put('/adminUpdate', async (req, res) => {
     res.json({ msg: 'Profile updated successfully' });
   } catch (err) {
     res.status(500).send('Server error');
+  }
+});
+
+// [Dashboard Charts]
+
+//Sales Data
+router.get("/sales", async (req, res) => {
+  try {
+    const salesData = [
+      { name: "Jan", sales: 4000, stock: 2400, revenue: 2400 },
+      { name: "Feb", sales: 3000, stock: 1398, revenue: 2210 },
+      { name: "Mar", sales: 2000, stock: 9800, revenue: 2290 },
+      // Add more data as required
+    ];
+    res.status(200).json(salesData);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch sales data" });
+  }
+});
+
+// Categories Data
+router.get("/categories", async (req, res) => {
+  try {
+    const pieData = [
+      { name: "Electronics", value: 400 },
+      { name: "Furniture", value: 300 },
+      { name: "Clothing", value: 300 },
+      { name: "Books", value: 200 },
+    ];
+    res.status(200).json(pieData);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch category data" });
+  }
+});
+
+//Product Views Data
+router.get("/product-views", async (req, res) => {
+  try {
+    const barData = [
+      { name: "Product A", views: 2400 },
+      { name: "Product B", views: 4567 },
+      { name: "Product C", views: 1398 },
+      // Add more data as needed
+    ];
+    res.status(200).json(barData);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch product view data" });
   }
 });
 

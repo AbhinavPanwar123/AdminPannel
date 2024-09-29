@@ -53,28 +53,78 @@ export default function AdminSignIn() {
   }, [userData, navigate]);
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, marginTop: 8 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">Sign in</Typography>
-        <Formik initialValues={{ email: '', password: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
-          {({ errors, touched }) => (
-            <Form noValidate>
-              <Field as={TextField} name="email" label="Email Address" fullWidth error={touched.email && Boolean(errors.email)} helperText={touched.email && errors.email} margin="normal" />
-              <Field as={TextField} name="password" label="Password" type="password" fullWidth error={touched.password && Boolean(errors.password)} helperText={touched.password && errors.password} margin="normal" />
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
-              </Button>
-              {error && <Typography color="error">{error}</Typography>}
-            </Form>
-          )}
-        </Formik>
-        <Grid container>
-          <Grid item xs><Link href="/forgot" variant="body2">Forgot password?</Link></Grid>
-        </Grid>
-      </Box>
-    </Paper>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f5f5f5', // Optional: Change background color for contrast
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 4,
+          maxWidth: 400, // Restrict width to avoid too wide layout
+          width: '100%',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">Sign in</Typography>
+          <Formik initialValues={{ email: '', password: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            {({ errors, touched }) => (
+              <Form noValidate>
+                <Field
+                  as={TextField}
+                  name="email"
+                  label="Email Address"
+                  fullWidth
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
+                  margin="normal"
+                />
+                <Field
+                  as={TextField}
+                  name="password"
+                  label="Password"
+                  type="password"
+                  fullWidth
+                  error={touched.password && Boolean(errors.password)}
+                  helperText={touched.password && errors.password}
+                  margin="normal"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={loading}
+                >
+                  {loading ? 'Signing in...' : 'Sign In'}
+                </Button>
+                {error && <Typography color="error">{error}</Typography>}
+              </Form>
+            )}
+          </Formik>
+          <Grid container>
+            <Grid item xs>
+              <Link href="/forgot" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
+    </Box>
   );
 }
