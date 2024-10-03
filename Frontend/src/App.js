@@ -13,6 +13,7 @@ import Setting from './Component/Setting/Setting';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import './App.css';
 import { ThemeContext } from './ThemeContext';
+import AdminProfile from './Component/AdminProfile/AdminProfile';
 
 function App() {
   const { theme } = useContext(ThemeContext);
@@ -32,6 +33,7 @@ function App() {
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/resetPassword/:token" element={<ResetPassword />} />
           <Route path="/dashboard" element={<AdminCheck Component={Dashboard} />} />
+          <Route path="/adminProfile" element={<AdminCheck Component={AdminProfile} />} />
           <Route path="/product" element={<AdminCheck Component={Product} />} />
           <Route path="/seller" element={<AdminCheck Component={Seller} />} />
           <Route path="/setting" element={<AdminCheck Component={Setting} />} />

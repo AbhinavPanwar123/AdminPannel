@@ -126,7 +126,6 @@ router.post("/sendVerificationEmail", async function (req, res, next) {
 router.put("/resetPassword", async (req, res, next) => {
   try {
     const { resetToken, newPassword } = req.body;
-    console.log();
     let user = await adminSchema.findOne({ resetToken });
     if (!user) {
       return res
@@ -160,12 +159,12 @@ router.put("/resetPassword", async (req, res, next) => {
   }
 });
 
-// Update User Profile
+// Update Admin Profile
 router.put('/adminUpdate', async (req, res) => {
   const { name, email } = req.body;
 
   try {
-    let user = await adminSchema.find(email);
+    let user = await adminSchema.findOne({email});
 
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
@@ -181,6 +180,20 @@ router.put('/adminUpdate', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+//Get Admin Data
+router.get('/adminData', async(req,res) => {
+  try {
+    const adminData = await adminSchema.find({});
+    return res.status(200).json({success:true, admin:adminData});
+  } catch (error) {
+    console.log("Error Fetching Admin Data:",error);
+    return res.status(500).json({error:"Failed to Fetch Data"});
+  }
+})
+
+
+
 
 // [Dashboard Charts]
 
@@ -228,6 +241,9 @@ router.get("/product-views", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch product view data" });
   }
 });
+
+
+
 
 
 //[SELLER]

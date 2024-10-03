@@ -152,8 +152,8 @@ const Dashboard = () => {
           <div className="text-center text-white">
             <FaBoxes className="text-4xl mb-2" />
             <h3 className="text-xl font-semibold">Stock</h3>
-            <p className="text-4xl font-bold">2500 Products</p>
-            <p>[Available]</p>
+            <p className="text-4xl font-bold">2500</p>
+            <p>[Available Products]</p>
           </div>
         </div>
         {/* Total Revenue Card */}

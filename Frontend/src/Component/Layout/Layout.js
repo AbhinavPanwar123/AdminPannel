@@ -35,6 +35,10 @@ const Layout = ({ children, pageTitle }) => {
     navigate("/");
   };
 
+  const handleProfile = () => {
+    navigate('/adminProfile')
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -52,7 +56,7 @@ const Layout = ({ children, pageTitle }) => {
             {pageTitle}
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton color="inherit">
+            <IconButton color="inherit"  onClick={handleProfile}>
               <AccountCircle />
               <Typography variant="body1" sx={{ marginLeft: 1 }}>
                 Profile
